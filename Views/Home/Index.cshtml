@@ -1,0 +1,13 @@
+<div class="row">
+    @if (Model != null)
+    {
+        <div class="col-md-12">
+            <h2></h2>
+            <ul>
+                @foreach (CommunityDashboard.Controllers.FeedItem article in Model) {
+                    <li><a href="@article.Link">@Html.Raw(article.Source): @Html.Raw(article.Title)</a></li>
+                }
+            </ul>
+        </div>
+    }
+</div>
