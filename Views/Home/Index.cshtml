@@ -6,8 +6,7 @@
             <ul>
                 @foreach (CommunityDashboard.Controllers.FeedItem article in Model) {
                     <li>
-                        <div><a href="@article.Link"><b>@Html.Raw(article.Source): @Html.Raw(article.Title)</b></a></div>
-                        <div>@Html.Raw(article.Content)</div>
+                        <a href="@article.Link"><b>@Html.Raw(article.Source): @Html.Raw(article.Title)</b></a>
                     </li>
                 }
             </ul>
