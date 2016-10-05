@@ -14,12 +14,21 @@ namespace CommunityDashboard.Controllers
         IMemoryCache _memoryCache;
         static List<FeedSource> feeds = new List<FeedSource> {
             // Wordpress
-            new FeedSource {Source = "woocommerce", Url = "https://wordpress.org/support/plugin/woocommerce-securesubmit-gateway/rss/"},
-            new FeedSource {Source = "securesubmit", Url = "https://wordpress.org/support/plugin/securesubmit/rss/"},
-            new FeedSource {Source = "events-manager-pro", Url = "https://wordpress.org/support/plugin/events-manager-pro-securesubmit-gateway/rss/"},
-            new FeedSource {Source = "gravityforms", Url = "https://wordpress.org/support/plugin/heartland-secure-submit-addon-for-gravity-forms/rss/"},
+            new FeedSource {Source = "wordpress-woocommerce", Url = "https://wordpress.org/support/plugin/woocommerce-securesubmit-gateway/rss/"},
+            new FeedSource {Source = "wordpress-securesubmit", Url = "https://wordpress.org/support/plugin/securesubmit/rss/"},
+            new FeedSource {Source = "wordpress-events-manager-pro", Url = "https://wordpress.org/support/plugin/events-manager-pro-securesubmit-gateway/rss/"},
+            new FeedSource {Source = "wordpress-gravityforms", Url = "https://wordpress.org/support/plugin/heartland-secure-submit-addon-for-gravity-forms/rss/"},
             // Magento
-            new FeedSource {Source = "magento", Url = "https://community.magento.com/jvdeh29369/rss/search?q=\"secure+submit\"&filter=labels&search_type=thread"},
+            new FeedSource {Source = "magento-1", Url = "https://community.magento.com/jvdeh29369/rss/search?q=\"secure+submit\"&filter=labels&search_type=thread"},
+            // Twitter
+            new FeedSource {Source = "twitter-secure-submit", Url = "https://queryfeed.net/tw?q=%22secure+submit%22"},
+            new FeedSource {Source = "twitter-securesubmit", Url = "https://queryfeed.net/tw?q=securesubmit"},
+            // Facebook
+            new FeedSource {Source = "facebook-secure-submit", Url = "https://queryfeed.net/facebook?q=%22secure+submit%22"},
+            new FeedSource {Source = "facebook-securesubmit", Url = "https://queryfeed.net/facebook?q=securesubmit"},
+            // Google+
+            new FeedSource {Source = "gplus-secure-submit", Url = "https://queryfeed.net/plus?q=%22secure+submit%22"},
+            new FeedSource {Source = "gplus-securesubmit", Url = "https://queryfeed.net/plus?q=securesubmit"},
         };
 
         public HomeController(IMemoryCache memoryCache)
@@ -69,16 +78,16 @@ namespace CommunityDashboard.Controllers
                 XDocument doc = XDocument.Parse(responseString);
                 var feedItems = from item in doc.Root
                                                 .Descendants()
-                                                .First(i => i.Name.LocalName == "channel")
+                                                .FirstOrDefault(i => i.Name.LocalName == "channel")
                                                 .Elements()
                                                 .Where(i => i.Name.LocalName == "item")
                                 select new FeedItem
                                 {
                                     Source = feed.Source,
-                                    Content = item.Elements().First(i => i.Name.LocalName == "description").Value,
-                                    Link = item.Elements().First(i => i.Name.LocalName == "link").Value,
-                                    PublishDate = ParseDate(item.Elements().First(i => i.Name.LocalName == "pubDate").Value),
-                                    Title = item.Elements().First(i => i.Name.LocalName == "title").Value
+                                    Content = item.Elements().FirstOrDefault(i => i.Name.LocalName == "description")?.Value,
+                                    Link = item.Elements().FirstOrDefault(i => i.Name.LocalName == "link")?.Value,
+                                    PublishDate = ParseDate(item.Elements().FirstOrDefault(i => i.Name.LocalName == "pubDate")?.Value),
+                                    Title = item.Elements().FirstOrDefault(i => i.Name.LocalName == "title")?.Value
                                 };
                 return feedItems.ToList();
             }
